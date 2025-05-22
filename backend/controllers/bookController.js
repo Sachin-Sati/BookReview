@@ -15,11 +15,31 @@ const addBook = async (req, res) => {
 // Show All Books
 const getBooks = async (req, res) => {
     try {
-        const books = await Book.find({});
-        if(!books) return res.status(404).json({ error: 'Books Not Found'});
-        res.status(200).json(books);      
+        // handle query parameters
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+        if(page < 1 || limit < 1) return res.status(400).json({ error: 'Page or Limit must be positive' });
+
+
+        // calculate skip
+        const skip = (page - 1) * limit;
+
+        // calculate total books, total pages
+        const totalBooks = await Book.countDocuments();
+        const totalPages = Math.ceil(totalBooks/limit);
+
+        // Fetch Books
+        const books = await Book.find({}).skip(skip).limit(limit);
+        if(!books || books.length === 0) return res.status(404).json({ error: 'No books found for this page'});
+        res.status(200).json({
+            page,
+            limit,
+            totalBooks,
+            totalPages,
+            data: books
+        });      
     } catch (error) {
-        res.status(400).json({ error: 'Server Error' });
+        res.status(400).json({ error: 'Server Error', details: error.message });
     }
 }
 
