@@ -10,7 +10,7 @@ const searchBooks = async (req, res) => {
         });
         res.status(200).json({ message: 'Books Matched', books});        
     } catch (error) {
-        res.status(500).json({ error: error.message});
+        res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
 

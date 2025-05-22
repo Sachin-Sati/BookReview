@@ -23,7 +23,7 @@ const addReview = async (req, res) => {
         await book.save();
         res.status(200).json({ message: 'Review Added', review: newReview}); 
     } catch (error) {
-        res.status(400).json({ error: error.message});
+        res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
 
@@ -34,7 +34,7 @@ const updateReview = async(req, res) => {
         const updatedReview = await Review.findByIdAndUpdate(reviewId, req.body, { new: true });
         res.status(200).json({ message: 'Review Updated', review: updatedReview});        
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
 
@@ -44,7 +44,7 @@ const deleteReview = async (req, res) => {
         await req.review.deleteOne();
         res.status(200).json({ message: 'Review Deleted'});
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
 

@@ -8,7 +8,7 @@ const addBook = async (req, res) => {
         await book.save();
         res.status(200).json({ message: 'New Book Added', book});        
     } catch (error) {
-        res.status(400).json({ error: 'Failed to Add Book' });
+        res.status(500).json({ error: 'Failed to Add Book', details: error.message });
     }
 }
 
@@ -39,7 +39,7 @@ const getBooks = async (req, res) => {
             data: books
         });      
     } catch (error) {
-        res.status(400).json({ error: 'Server Error', details: error.message });
+        res.status(500).json({ error: 'Server Error', details: error.message });
     }
 }
 
@@ -51,7 +51,7 @@ const bookDetails = async (req, res) => {
         if(!book) return res.status(404).json({ error: 'Book Not Found'});
         res.status(200).json(book); 
     } catch (error) {
-        res.status(400).json({ error: 'Server Error'});
+        res.status(500).json({ error: 'Server Error', details: error.message});
     }
 }
 
